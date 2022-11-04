@@ -1,9 +1,15 @@
+/**
+*	Created by Lakshman Karthik Ramkumar (latchukarthick98) on 11/03/2022
+ */
+
 package main
 
 import (
 	"fmt"
 	"log"
 	"os"
+
+	"fetch-rewards-backend/routes"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -27,7 +33,8 @@ func main() {
 	r := gin.Default()
 
 	port := getEnvVar("PORT")
-	fmt.Printf("Port %s \n", port)
+	routes.InitRouter(r)
+	fmt.Printf("Running on Port %s \n", port)
 	// Initialze Server on Port 3001
 	r.Run(":" + port)
 }
