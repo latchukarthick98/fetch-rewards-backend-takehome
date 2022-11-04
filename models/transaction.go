@@ -56,3 +56,8 @@ func (tq *TransactionQueue) update(item *Item, points int) {
 	item.points = points
 	heap.Fix(tq, item.index)
 }
+
+// Get the root of heap. In this case its the oldest item.
+func (t1 TransactionQueue) root() *Item {
+	return t1[0]
+}
