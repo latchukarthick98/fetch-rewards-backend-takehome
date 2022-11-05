@@ -9,6 +9,8 @@ import (
 
 var Tq models.TransactionQueue
 
+var Summary map[string]int = make(map[string]int)
+
 func InitTQ(payer string, points int, ts string) {
 	Tq = make(models.TransactionQueue, 1)
 	Tq.SetCount(1)

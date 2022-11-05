@@ -20,16 +20,14 @@ func InsertTransaction(c *gin.Context) {
 		return
 	}
 	fmt.Printf("Count: %d", datastore.Tq.GetCount())
-	if datastore.Tq.Len() == 0 {
+	if datastore.Tq.GetCount() == 0 {
 		datastore.InitTQ(item.Payer, item.Points, item.Timestamp)
 	} else {
-		if datastore.Tq.GetCount() == 0 {
-			datastore.InitTQ(item.Payer, item.Points, item.Timestamp)
-
-		} else {
-			datastore.Tq.Insert(item.Payer, item.Points, item.Timestamp)
-		}
+		datastore.Tq.Insert(item.Payer, item.Points, item.Timestamp)
 	}
+
+	// Update the total spendable points by payer
+	datastore.Summary[item.Payer] += item.Points
 
 	c.IndentedJSON(http.StatusCreated, item)
 }

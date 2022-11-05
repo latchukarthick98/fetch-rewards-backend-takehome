@@ -14,4 +14,5 @@ func RegisterPublicRoutes(r *gin.Engine) {
 	r.GET("/transaction", controllers.TestConrol)
 	r.POST("/transaction", controllers.InsertTransaction)
 	r.GET("/balance", controllers.GetBalance)
+	r.POST("/spend", controllers.HandleSpend)
 }

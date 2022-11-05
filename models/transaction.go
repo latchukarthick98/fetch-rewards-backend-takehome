@@ -114,6 +114,10 @@ func (tq TransactionQueue) InitItem(payer string, points int, ts string) {
 	// return item
 }
 
+func (tq *TransactionQueue) PopTransaction() *Item {
+	return heap.Pop(tq).(*Item)
+}
+
 func (tq TransactionQueue) PrintTQ() {
 	for tq.Len() > 0 {
 		item := heap.Pop(&tq).(*Item)
