@@ -9,5 +9,5 @@ import (
 )
 
 func InitRouter(engine *gin.Engine) {
-
+	RegisterPublicRoutes(engine)
 }
