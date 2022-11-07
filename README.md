@@ -83,3 +83,22 @@ or
 ```
 go test -v
 ```
+
+# API Documentation
+
+## Routes
+
+## Get Balance
+Path: `/balance`
+Method: `GET`
+Response-Type: `JSON`
+
+### Example
+Request: `http://localhost:${PORT}/balance`
+
+Response:
+```
+{
+    "DANNON": 1000,
+    "UNILEVER": 0
+}
