@@ -15,6 +15,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Helper function to retrieve env variable
 func getEnvVar(key string) string {
 
 	// Load .env file

@@ -22,6 +22,7 @@ type resultItem struct {
 	Points int    `json:"points"`
 }
 
+// Calculate the total points available for a user
 func calculateTotalPoints(m map[string]int) int {
 	total := 0
 	for _, val := range m {
@@ -29,21 +30,28 @@ func calculateTotalPoints(m map[string]int) int {
 	}
 	return total
 }
+
+// Handler function for "POST" method for /spend route
 func HandleSpend(c *gin.Context) {
 	var body reqBody
 
 	validate := validator.New()
 
+	// Parse Request Body
 	if err := c.BindJSON((&body)); err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg":   "Invalid Input",
+			"error": err,
+		})
 		return
 	}
 
+	// Validate Request Body
 	err := validate.Struct(body)
 	if err != nil {
 		validationErrors := err.(validator.ValidationErrors)
-		c.JSON(400, gin.H{
-			"err": validationErrors.Error(),
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": validationErrors.Error(),
 		})
 		return
 	}
@@ -54,6 +62,7 @@ func HandleSpend(c *gin.Context) {
 	// datastore.Tq.PrintTQ()
 	available_points := calculateTotalPoints(m)
 
+	// Determine if the transaction is possible. Drop request if no sufficent funds (points)
 	if spend_points > available_points {
 		c.JSON(200, gin.H{
 			"msg":     "INSUFFICIENT_BALANCE",
@@ -61,32 +70,35 @@ func HandleSpend(c *gin.Context) {
 		})
 		return
 	}
+
+	// Check if Transactions are available before deducting the points
 	for datastore.Tq.Len() > 0 && spend_points > 0 {
 		old := datastore.Tq.GetOldestTransaction()
-		// fmt.Printf("Count: %d , Len: %d\n", datastore.Tq.GetCount(), datastore.Tq.Len())
-		// fmt.Printf("Top: %s -> %d -> %s", old.Payer, old.Points, old.Timestamp)
+
+		// Use the whole transaction
 		if (spend_points - old.Points) >= 0 {
-			// diff := old.Points - spend_points
+
 			spend_points -= old.Points
 			m[old.Payer] -= old.Points
 			m1[old.Payer] -= old.Points
 
-			// fmt.Printf("Bal (%s): %d, %d \n", old.Payer, spend_points, old.Points)
 			datastore.Tq.PopTransaction()
 		} else {
+			// Use partial points from a transaction (only what is necessary)
 			comp := old.Points - spend_points
 			m1[old.Payer] -= spend_points
 			spend_points = 0
 			m[old.Payer] = comp
 			old.Points = comp
 			datastore.Tq.Update(old, comp)
-			// fmt.Printf("More case: Bal: %d, %d \n", spend_points, old.Points)
+
 		}
 
 	}
 
 	result := []resultItem{}
 
+	// Generate the response with payer and points as key-value pairs
 	for key, val := range m1 {
 		result = append(result, resultItem{
 			Payer:  key,

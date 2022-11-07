@@ -13,21 +13,9 @@ import (
 *	Handles the balance route for "GET" method
  */
 func GetBalance(c *gin.Context) {
-	// q := datastore.Tq
 
-	// if q.GetCount() == 0 {
-	// 	c.JSON(404, "No transactions recorded!")
-	// 	return
-	// }
-
+	// Return the Summary map which holds the balances by payers so far
 	m := datastore.Summary
-
-	// jsonStr, err := json.Marshal(m)
-	// if err != nil {
-	// 	fmt.Printf("Error: %s", err.Error())
-	// } else {
-	// 	fmt.Println(string(jsonStr))
-	// }
 
 	c.JSON(200, m)
 

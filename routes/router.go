@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Initalizer for routes
 func InitRouter(engine *gin.Engine) {
 	engine.Use(middlewares.CORSMiddleware())
 	RegisterPublicRoutes(engine)

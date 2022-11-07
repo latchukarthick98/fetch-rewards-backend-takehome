@@ -21,6 +21,7 @@ func InitTQ(payer string, points int, ts string) {
 	Tq.SetInitialzed(true)
 }
 
+// Clean up, useful for Unit tests
 func Cleanup() {
 	for k := range Summary {
 		delete(Summary, k)
