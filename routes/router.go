@@ -5,9 +5,12 @@
 package routes
 
 import (
+	"fetch-rewards-backend/middlewares"
+
 	"github.com/gin-gonic/gin"
 )
 
 func InitRouter(engine *gin.Engine) {
+	engine.Use(middlewares.CORSMiddleware())
 	RegisterPublicRoutes(engine)
 }

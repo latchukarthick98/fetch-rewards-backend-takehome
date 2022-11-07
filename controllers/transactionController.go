@@ -7,8 +7,9 @@ package controllers
 import (
 	"fetch-rewards-backend/datastore"
 	"fetch-rewards-backend/models"
-	"fmt"
 	"net/http"
+
+	"github.com/go-playground/validator/v10"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +20,16 @@ func InsertTransaction(c *gin.Context) {
 	if err := c.BindJSON(&item); err != nil {
 		return
 	}
-	fmt.Printf("Count: %d", datastore.Tq.GetCount())
+	validate := validator.New()
+	err := validate.Struct(item)
+	if err != nil {
+		validationErrors := err.(validator.ValidationErrors)
+		c.JSON(400, gin.H{
+			"err": validationErrors.Error(),
+		})
+		return
+	}
+	// fmt.Printf("Count: %d", datastore.Tq.GetCount())
 	// Update the total spendable points by payer
 	datastore.Summary[item.Payer] += item.Points
 	if datastore.Summary[item.Payer] < 0 {

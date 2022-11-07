@@ -11,9 +11,9 @@ import (
 
 // An Item is a single transaction.
 type Item struct {
-	Payer     string `json:"payer"`     // Payer name.
-	Timestamp string `json:"timestamp"` // Timestamp in UNIX epoch
-	Points    int    `json:"points"`    // Reward points
+	Payer     string `json:"payer" validate:"required"`     // Payer name.
+	Timestamp string `json:"timestamp" validate:"required"` // Timestamp in UNIX epoch
+	Points    int    `json:"points" validate:"required"`    // Reward points
 	// The index is needed by update and is maintained by the heap.Interface methods.
 	index int // The index of the item in the heap.
 }
