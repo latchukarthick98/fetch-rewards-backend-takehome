@@ -5,7 +5,6 @@ package models
 
 import (
 	"container/heap"
-	"fmt"
 	"time"
 )
 
@@ -98,7 +97,6 @@ func (t1 TransactionQueue) GetOldestTransaction() *Item {
 	if t1.GetCount() == 0 {
 		return nil
 	}
-	// println(t1[0].Payer)
 	return t1[0]
 }
 
@@ -114,15 +112,9 @@ func (tq TransactionQueue) InitItem(payer string, points int, ts string) {
 	// return item
 }
 
+// Removes a transaction from Queue
 func (tq *TransactionQueue) PopTransaction() *Item {
 	return heap.Pop(tq).(*Item)
-}
-
-func (tq TransactionQueue) PrintTQ() {
-	for tq.Len() > 0 {
-		item := heap.Pop(&tq).(*Item)
-		fmt.Printf("%s -> %s -> %d \n", item.Timestamp, item.Payer, item.Points)
-	}
 }
 
 func (tq TransactionQueue) Clear() {
