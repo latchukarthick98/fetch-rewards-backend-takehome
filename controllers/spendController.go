@@ -8,12 +8,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 
 	"fetch-rewards-backend/datastore"
 )
 
 type reqBody struct {
-	Points int `json:"points"`
+	Points int `json:"points" validate:"required"`
 }
 
 type resultItem struct {
@@ -31,8 +32,19 @@ func calculateTotalPoints(m map[string]int) int {
 func HandleSpend(c *gin.Context) {
 	var body reqBody
 
+	validate := validator.New()
+
 	if err := c.BindJSON((&body)); err != nil {
 		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	err := validate.Struct(body)
+	if err != nil {
+		validationErrors := err.(validator.ValidationErrors)
+		c.JSON(400, gin.H{
+			"err": validationErrors.Error(),
+		})
 		return
 	}
 
