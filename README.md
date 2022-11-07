@@ -23,7 +23,7 @@ PORT=3001
 ## Installation
 
 ## Using Docker and Docker Compose (Recommended)
-1. Install Docker and Docker Compose.
+1. Install [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/).
 2. Build Docker image 
 From the Project root run:
 
@@ -55,7 +55,7 @@ docker-compose down
 ## Direct Install (Alternative)
 ## Install Golang
 
-Make sure you have Go 1.13 or higher installed.
+Make sure you have Go 1.19 or higher installed.
 
 https://golang.org/doc/install
 
