@@ -125,6 +125,15 @@ func (tq TransactionQueue) PrintTQ() {
 	}
 }
 
+func (tq TransactionQueue) Clear() {
+	if tq.GetCount() == 0 {
+		return
+	}
+	for tq.Len() > 0 {
+		heap.Pop(&tq)
+	}
+}
+
 func (tq TransactionQueue) ToMap() map[string]int {
 	m := make(map[string]int)
 	for _, v := range tq {

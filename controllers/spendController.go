@@ -11,15 +11,24 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"fetch-rewards-backend/datastore"
-	"fetch-rewards-backend/models"
 )
 
 type reqBody struct {
 	Points int `json:"points"`
 }
 
-var q models.TransactionQueue = datastore.Tq
+type resultItem struct {
+	Payer  string `json:"payer"`
+	Points int    `json:"points"`
+}
 
+func calculateTotalPoints(m map[string]int) int {
+	total := 0
+	for _, val := range m {
+		total += val
+	}
+	return total
+}
 func HandleSpend(c *gin.Context) {
 	var body reqBody
 
@@ -32,11 +41,15 @@ func HandleSpend(c *gin.Context) {
 	m := datastore.Summary
 	m1 := make(map[string]int)
 	// datastore.Tq.PrintTQ()
-	fmt.Printf("Count: %d , Len: %d\n", q.GetCount(), datastore.Tq.Len())
-	// for q.Len() > 0 {
-	// 	item := q.PopTransaction()
-	// 	fmt.Printf("%s -> %s -> %d (Len: %d) \n", item.Timestamp, item.Payer, item.Points, q.Len())
-	// }
+	available_points := calculateTotalPoints(m)
+
+	if spend_points > available_points {
+		c.JSON(200, gin.H{
+			"msg":     "Insufficent balance",
+			"balance": available_points,
+		})
+		return
+	}
 	for datastore.Tq.Len() > 0 && spend_points > 0 {
 		old := datastore.Tq.GetOldestTransaction()
 		fmt.Printf("Count: %d , Len: %d\n", datastore.Tq.GetCount(), datastore.Tq.Len())
@@ -55,12 +68,20 @@ func HandleSpend(c *gin.Context) {
 			spend_points = 0
 			m[old.Payer] = comp
 			old.Points = comp
-			// q.Insert(old.Payer, old.Points, old.Timestamp)
 			datastore.Tq.Update(old, comp)
 			fmt.Printf("More case: Bal: %d, %d \n", spend_points, old.Points)
 		}
 
 	}
 
-	c.IndentedJSON(http.StatusCreated, m1)
+	result := []resultItem{}
+
+	for key, val := range m1 {
+		result = append(result, resultItem{
+			Payer:  key,
+			Points: val,
+		})
+	}
+
+	c.JSON(http.StatusOK, result)
 }
