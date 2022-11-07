@@ -12,7 +12,7 @@ Make sure the `.env` file is present. It is important for the API to start, as i
 
 If `.env` file is not present, copy it from the template `.env.example` by running:
 ```
-cp .env.exampe .env
+cp .env.example .env
 ```
 
 ### Example
