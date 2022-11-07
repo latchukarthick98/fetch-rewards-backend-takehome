@@ -108,7 +108,9 @@ Content-Type: `application/json`
 Response-Type: `application/json`
 ### Example
 Request: `http://localhost:${PORT}/balance`
+
 curl: `curl -X GET http://localhost:${PORT}/balance`
+
 Response:
 ```
 {

@@ -3,8 +3,8 @@ BINARY_NAME=fetch-rewards-api
 build:
 	GOARCH=amd64 GOOS=darwin go build -o ${BINARY_NAME}-darwin main.go
 	GOARCH=amd64 GOOS=linux go build -o ${BINARY_NAME}-linux main.go
-	GOARCH=amd64 GOOS=window go build -o ${BINARY_NAME}-windows main.go
-
+	GOARCH=amd64 GOOS=windows go build -o ${BINARY_NAME}-windows main.go
+	go build -o ${BINARY_NAME} main.go
 run:
 	./${BINARY_NAME}
 
