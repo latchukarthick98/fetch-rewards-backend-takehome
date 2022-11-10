@@ -27,7 +27,9 @@ clean:
 
 test:
 	go test -v
-
+test_and_cover:
+	go test main_test.go -cover -coverpkg ./... -coverprofile=coverage.out
+	go tool cover -html=coverage.out  
 dep:
 	go mod download
 
